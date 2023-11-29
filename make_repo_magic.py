@@ -69,7 +69,7 @@ def git_operations(repo_dir, commit_message):
 
     try:
         repo.git.push('origin', 'HEAD:main', '--set-upstream',
-                      f'https://{git_username}:{git_password}@github.com/{git_username}/repo.git')
+                        f'https://{git_username}:{git_password}@github.com/{git_username}/repo.git')
     except exc.GitCommandError as e:
         print(f"Git push failed: {e}")
 

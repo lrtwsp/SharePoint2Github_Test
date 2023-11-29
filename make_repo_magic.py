@@ -9,6 +9,24 @@ import shutil
 import os
 from git import Repo, exc
 from dotenv import load_dotenv
+from oletools.olevba import VBA_Parser
+
+def extract_vba_to_text(excel_file, output_dir):
+    """
+    Extracts VBA code from an Excel file and saves it as text files.
+    Args:
+    excel_file (str): The path to the Excel file.
+    output_dir (str): The directory where the VBA code will be saved as text.
+    """
+    vba_parser = VBA_Parser(excel_file)
+
+    if vba_parser.detect_vba_macros():
+        for (filename, stream_path, vba_filename, vba_code) in vba_parser.extract_macros():
+            with open(os.path.join(output_dir, vba_filename), 'w') as file:
+                file.write(vba_code)
+
+    vba_parser.close()
+
 
 def extract_vba(excel_file, vba_output_dir):
     """
@@ -83,7 +101,7 @@ def main(excel_files, repo_dir):
 
         csv_file = os.path.join(csv_output_dir, os.path.splitext(os.path.basename(file))[0] + '.csv')
         convert_excel_to_csv(file, csv_file)
-        extract_vba(file, vba_output_dir)
+        extract_vba_to_text(file, vba_output_dir)
 
     commit_message = 'Updated files: ' + ', '.join([os.path.basename(f) for f in excel_files])
     git_operations(repo_dir, commit_message)

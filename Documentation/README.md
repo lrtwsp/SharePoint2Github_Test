@@ -11,7 +11,7 @@ Simple Itinerary Viewer
 
 
 
-![Image](images/image_0_Picture 17.png)
+![Image]('images/image_0_Picture 17.png')
 
 ## Slide 2
 
@@ -41,7 +41,7 @@ Objective
 
 To provide a simple method for modellers to visualize the location and track numbers in an itinerary. 
 
-![Image](images/image_3_Picture 2.png)
+![Image]('images/image_3_Picture 2.png')
 
 ## Slide 5
 
@@ -75,13 +75,13 @@ Installation
 
 No installation required. Just open the html file titled “simple_itinerary_viewer.html” in a browser that supports JavaScript (Firefox, Chrome, or Edge). Paste the full itinerary string in the input box and click Generate Layout.  
 
-![Image](images/image_7_Picture 2.png)
+![Image]('images/image_7_Picture 2.png')
 
 LSE:004G:Pickering StationC1-Union StationT4F.EQ[PKGO.C1-PKRW.*-PSGO.*-PKSH.C2-DHRJ.*-DMJW.T3-RHLE.*-RHGO.T1-RHLW.*-MNSV.T1-GWGO.T2-EGGO.T1-MIDL.*-SCXO.T1-SCLF.T3-SCBE.T1-SCGO.T1-SCBJ.T2-DFGO.T2-DNFW.T2-EHGO.T1-CHRY.T3-PARL.E3-SHER.E3-JARV.T8-USXO.*-USGO.T4F]
 
 
 
-![Image](images/image_7_Picture 21.png)
+![Image]('images/image_7_Picture 21.png')
 
 
 
@@ -101,13 +101,13 @@ How to Use – Required Files
 
 Open the html file titled “simple_itinerary_viewer.html” in a browser that supports JavaScript (Firefox, Chrome, or Edge). Paste the full itinerary string in the input box and click Generate Layout.  
 
-![Image](images/image_9_Picture 2.png)
+![Image]('images/image_9_Picture 2.png')
 
 LSE:004G:Pickering StationC1-Union StationT4F.EQ[PKGO.C1-PKRW.*-PSGO.*-PKSH.C2-DHRJ.*-DMJW.T3-RHLE.*-RHGO.T1-RHLW.*-MNSV.T1-GWGO.T2-EGGO.T1-MIDL.*-SCXO.T1-SCLF.T3-SCBE.T1-SCGO.T1-SCBJ.T2-DFGO.T2-DNFW.T2-EHGO.T1-CHRY.T3-PARL.E3-SHER.E3-JARV.T8-USXO.*-USGO.T4F]
 
 
 
-![Image](images/image_9_Picture 5.png)
+![Image]('images/image_9_Picture 5.png')
 
 
 

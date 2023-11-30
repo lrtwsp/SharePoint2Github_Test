@@ -9,6 +9,7 @@ from oletools.olevba import VBA_Parser
 def extract_vba_to_text(excel_file, output_dir):
     """
     Extracts VBA code from an Excel file and saves it as text files with appropriate extensions.
+    Differentiates between modules, classes, and forms.
     Args:
     excel_file (str): The path to the Excel file.
     output_dir (str): The directory where the VBA code will be saved as text.
@@ -17,8 +18,16 @@ def extract_vba_to_text(excel_file, output_dir):
 
     if vba_parser.detect_vba_macros():
         for (filename, stream_path, vba_filename, vba_code) in vba_parser.extract_macros():
-            file_extension = '.vba'  # Default extension
-            # Additional logic can be added here to determine the correct extension
+            # Determine the correct extension based on the stream_path
+            if 'scripts' in stream_path.lower() or 'modules' in stream_path.lower():
+                file_extension = '.bas'  # Standard modules
+            elif 'classes' in stream_path.lower():
+                file_extension = '.cls'  # Class modules
+            elif 'forms' in stream_path.lower():
+                file_extension = '.frm'  # Forms
+            else:
+                file_extension = '.vba'  # Default extension
+
             with open(os.path.join(output_dir, vba_filename + file_extension), 'w') as file:
                 file.write(vba_code)
 

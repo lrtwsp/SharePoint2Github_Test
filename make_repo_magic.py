@@ -66,18 +66,11 @@ def convert_excel_to_csv(excel_file, csv_file):
 def git_operations(repo_dir, commit_message):
     """
     Performs git add, commit, and push operations in the specified repository directory.
-    Reads Git credentials from a .env file.
     Args:
     repo_dir (str): The path to the local Git repository.
     commit_message (str): The commit message to use.
     """
-    # Load environment variables from .env file
-    load_dotenv(os.path.join(repo_dir, '.env'))
-
-    git_username = os.environ.get('GIT_USERNAME')
-    git_password = os.environ.get('GIT_PASSWORD')
-
-    repo = Repo(repo_dir)
+    repo = git.Repo(repo_dir)
     repo.git.add(A=True)
 
     try:
@@ -86,8 +79,7 @@ def git_operations(repo_dir, commit_message):
         print(f"Git commit failed: {e}")
 
     try:
-        remote_url = f'https://{git_username}:{git_password}@github.com/{git_username}/repo.git'
-        repo.git.push('origin', 'HEAD:main', '--set-upstream', remote_url)
+        repo.git.push('origin', 'main')
     except exc.GitCommandError as e:
         print(f"Git push failed: {e}")
 

@@ -5,6 +5,8 @@ import argparse
 import os
 from git import exc
 from oletools.olevba import VBA_Parser
+import json
+from datetime import datetime, date, time
 
 def extract_vba_to_text(excel_file, output_dir):
     """
@@ -33,16 +35,41 @@ def extract_vba_to_text(excel_file, output_dir):
 
     vba_parser.close()
 
-def convert_excel_to_csv(excel_file, csv_file):
+def convert_excel_to_csvs(excel_file, csv_output_dir):
     """
-    Converts an Excel file to a CSV file.
+    Converts each sheet in an Excel file to a separate CSV file.
     Args:
     excel_file (str): The path to the Excel file.
-    csv_file (str): The path where the CSV file will be saved.
+    csv_output_dir (str): The directory where the CSV files will be saved.
     """
-    df = pd.read_excel(excel_file)
-    df.to_csv(csv_file, index=False)
+    with pd.ExcelFile(excel_file) as xls:
+        for sheet_name in xls.sheet_names:
+            df = pd.read_excel(xls, sheet_name)
+            csv_file = os.path.join(csv_output_dir, f"{sheet_name}.csv")
+            df.to_csv(csv_file, index=False)
 
+
+class CustomJSONEncoder(json.JSONEncoder):
+    """ Custom JSON Encoder to handle non-serializable types """
+    def default(self, obj):
+        if isinstance(obj, (datetime, date, time)):
+            return obj.isoformat()
+        # You can add more types here if necessary
+        return super(CustomJSONEncoder, self).default(obj)
+
+def convert_excel_to_json(excel_file, json_file):
+    """
+    Converts an Excel file to a JSON file, handling non-serializable types.
+    Args:
+    excel_file (str): The path to the Excel file.
+    json_file (str): The path where the JSON file will be saved.
+    """
+    with pd.ExcelFile(excel_file) as xls:
+        data = {sheet_name: pd.read_excel(xls, sheet_name).applymap(lambda x: x if not isinstance(x, (datetime, date, time)) else x.isoformat()).to_dict(orient='records') 
+                for sheet_name in xls.sheet_names}
+
+    with open(json_file, 'w') as file:
+        json.dump(data, file, cls=CustomJSONEncoder, indent=4)
 
 def git_operations(repo_dir, commit_message):
     """
@@ -66,14 +93,21 @@ def git_operations(repo_dir, commit_message):
 
 def main(excel_files, repo_dir):
     for file in excel_files:
-        csv_output_dir = os.path.join(repo_dir, 'extracted_data')
-        vba_output_dir = csv_output_dir  # Saving VBA code in the same directory
+        csv_output_dir = os.path.join(repo_dir, 'extracted_data', 'csv')
+        json_output_dir = os.path.join(repo_dir, 'extracted_data', 'json')
+        vba_output_dir = os.path.join(repo_dir, 'extracted_data', 'vba')
 
-        if not os.path.exists(csv_output_dir):
-            os.makedirs(csv_output_dir)
+        # Create directories if they don't exist
+        for dir in [csv_output_dir, json_output_dir, vba_output_dir]:
+            if not os.path.exists(dir):
+                os.makedirs(dir)
 
-        csv_file = os.path.join(csv_output_dir, os.path.splitext(os.path.basename(file))[0] + '.csv')
-        convert_excel_to_csv(file, csv_file)
+        # Convert Excel to CSVs and JSON
+        convert_excel_to_csvs(file, csv_output_dir)
+        json_file = os.path.join(json_output_dir, os.path.splitext(os.path.basename(file))[0] + '.json')
+        convert_excel_to_json(file, json_file)
+
+        # Extract VBA to text
         extract_vba_to_text(file, vba_output_dir)
 
     commit_message = 'Updated files: ' + ', '.join([os.path.basename(f) for f in excel_files])
